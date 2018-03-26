@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Switch</title>
+    <style>
+        .switch{
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            -ms-appearance: none;
+            -o-appearance: none;
+            width: 100px;
+            height: 60px;
+            outline: none;
+            border: 2px solid #ccc;
+            border-radius: 60px;
+            background:limegreen;
+            position: relative;
+            cursor: pointer;
+        }
+        .switch:before{
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            content: "关";
+            width: 60px;
+            background: #fff;
+            font-size: 20px;
+            color: limegreen;
+            text-align: center;
+            line-height: 60px;
+            border-radius: 50%;
+            transition: all .2s;
+        }
+        .switch:checked:before{
+            left: 38px;
+            content: '开';
+        }
+    </style>
+</head>
+<body>
+    <div id="root">
+        <!-- <input type="checkbox" class="switch"> -->
+    </div>
+    <script>
+        class Switch{
+            //构造函数上的属性方法写constructor
+            constructor(state=false){
+                this.state=state;
+            }
+            //原型上的
+            createElement(){
+                //创建html
+                let inp=document.createElement('input');
+                inp.type='checkbox';
+                inp.className='switch';
+                inp.checked=this.state;
+                this.ele=inp;
+            }
+            render(root){
+                //将html放在一个容器中
+                this.createElement();
+                root.appendChild(this.ele);
+            }
+            handlerChange(cb){
+                // onchange事件，cb回调函数传递当前的状态，this.state
+                this.ele.addEventListener('change',()=>{
+                    this.state=this.ele.checked;
+                    cb.call(this,this.state);
+                },false);
+            }
+        }
+        let switch1 =new Switch(true);
+        switch1.render(window.root);
+        switch1.handlerChange(function(state){
+            console.log(state);
+        });
+        let switch2 =new Switch();
+        switch2.render(window.root);
+    </script>
+</body>
+</html>

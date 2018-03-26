@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="root"></div>
+    <div id="app"></div>
+    <div id="app1"></div>
+    <div id="clock"></div>
+    <div class="person"></div>
+    <hr>
+    <div class="input"></div>
+    <script src="https://cdn.bootcss.com/react/15.4.2/react.min.js"></script>
+    <script src="https://cdn.bootcss.com/react/15.4.2/react-dom.min.js"></script>
+    <script src="https://cdn.bootcss.com/babel-standalone/6.22.1/babel.min.js"></script>
+    <script type="text/babel">
+        ReactDOM.render(
+            <h1>您好啊</h1>,
+            document.getElementById('root')
+        );
+        let Message=({msg})=>{
+            return <h1>{msg}</h1>
+        }
+        ReactDOM.render(<Message msg='helloReact'/>,document.getElementById('app1'));
+        // 时钟
+        let Clock=()=>{
+            return <h1>{new Date().toLocaleString()}</h1>
+        };
+        
+        setInterval(()=>{
+            ReactDOM.render(
+            <Clock/>,
+            document.getElementById("clock")
+          );
+        },1000);
+        // Person
+        class Person extends React.Component{
+            static defaultProps={
+                name: 'wuh'
+            }
+            render(){
+                return (
+                    <div>
+                        <p>name:{this.props.name}</p>
+                        <button>改变</button>    
+                    </div>
+                );
+            }
+        }
+        ReactDOM.render(
+            <Person/>,
+            document.querySelector(".person")
+        );
+        // 实现双向数据绑定
+        class Input extends React.Component{
+            constructor(){
+                super();
+                this.state={
+                    val: ""
+                }
+            }
+            handle=(e)=>{
+                let val=e.target.value;
+                this.setState({
+                    val
+                });
+            }
+            render(){
+                return (
+                    <div>
+                        <p>{this.state.val}</p>
+                        <input type='text' value={this.state.val} onChange={this.handle}/>
+                    </div>
+                );
+            }
+        }
+        ReactDOM.render(
+            <Input/>,
+            document.querySelector(".input")
+        );
+    </script>
+    <script>
+        ReactDOM.render(
+            React.createElement('h1',null,['hello']),
+            document.getElementById('app')
+        );
+    </script>
+</body>
+</html>
