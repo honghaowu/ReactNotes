@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdn.bootcss.com/react/15.4.2/react.min.js"></script>
+    <script src="https://cdn.bootcss.com/react/15.4.2/react-dom.min.js"></script>
+    <script src="https://cdn.bootcss.com/babel-standalone/6.22.1/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+    <script src="./index.js"></script>
+    <script type="text/babel">
+    /**
+     * 1 创建变量TYPE
+     * 2 创建reducer
+     * 3 创建容器
+     * 4 订阅
+     * **/
+    const INCREATE ='increate';
+    const DECREATE='decreate';
+    function reducer(state={number: 0},action){
+        switch (action.type){
+            case INCREATE:
+                return {number:state.number+action.count};
+                breack;
+            case DECREATE:
+                return {number: state.number-action.count};
+                break;
+            default:
+                return state;
+        }
+    }
+    let store =createStore(reducer);
+
+
+    class App extends React.Component{
+    constructor(){
+        super();
+        this.state={number:store.getState().number};
+    }
+    componentDidMount () {
+        store.subscribe(()=>{
+            this.setState({number:store.getState().number});
+        });
+    }
+    
+    add=()=>{
+        store.dispatch({type:INCREATE,count:1});
+    }
+    mins=()=>{
+        store.dispatch({type:DECREATE,count:1});
+    }
+    render(){
+        return (
+            <div>
+                <button onClick={this.add}>+</button>
+                <span>{this.state.number}</span>
+                <button onClick={this.mins}>-</button>
+            </div>
+        )
+    }
+    }
+    ReactDOM.render(
+        <App/>,
+        document.getElementById('root')
+    );
+    </script>
+</body>
+</html>

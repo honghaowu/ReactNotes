@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdn.bootcss.com/react/15.4.2/react.min.js"></script>
+    <script src="https://cdn.bootcss.com/react/15.4.2/react-dom.min.js"></script>
+    <script src="https://cdn.bootcss.com/babel-standalone/6.22.1/babel.min.js"></script>
+</head>
+<body>
+    <div id="app"></div>
+    <script src="./index.js"></script>
+    <script type="text/babel">
+        const TO='todo';
+        function todo(state=['吃饭'],action){
+            switch (action.type) {
+                case TO:
+                    return [...state,action.content];
+                    break;
+                default:
+                    return state;
+            }
+        }
+        let store=createStore(todo);
+
+        class Todo extends React.Component{
+            constructor(){
+                super();
+                this.state={todoList:store.getState()};
+            }
+            handleInput=(e)=>{
+                if(e.keyCode==13){
+                    store.dispatch({type:TO,content:e.target.value});
+                    e.target.value="";
+                }
+            }
+            componentDidMount () {
+                this.unsub=store.subscribe(()=>{
+                    this.setState({todoList:store.getState()});
+                });
+            }
+            componentWillUnmount = () => {
+            this.unsub();
+            };
+            
+            render(){
+                return (
+                    <div>
+                        <input type='text' onKeyUp={this.handleInput}/>
+                        <ul>
+                            {this.state.todoList.map((item,index)=><li key={index}>{item}</li>)}
+                        </ul>
+                    </div>
+                );
+            }
+        }
+        ReactDOM.render(<Todo/>,document.getElementById("app"));
+    </script>
+</body>
+</html>

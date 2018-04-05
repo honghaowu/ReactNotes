@@ -6,17 +6,6 @@ import '../../css/pc.css';
 
 
 export default class PCHeader extends React.Component{
-    constructor(){
-        super();
-        this.state={
-            current:'top'
-        };
-    }
-    handleClick=(e)=>{
-        this.setState(
-           {current:e.key}
-        );
-    }
     render(){
         return (
             <footer>

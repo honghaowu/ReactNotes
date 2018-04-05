@@ -20,6 +20,12 @@ class PCHeader extends React.Component{
             userid: 0
         };
     }
+    componentWillMount(){
+		if (localStorage.userid!=='undefined') {
+			this.setState({hasLogined:true});
+            this.setState({userNickName:localStorage.userNickName,userid:localStorage.userid});
+		}
+	}
     handleClick=(e)=>{
         if (e.key == "register") {
 			this.setState({current: 'register',modalVisible:true});
@@ -40,18 +46,20 @@ class PCHeader extends React.Component{
         var myFetchOptions={
             method: 'GET'
         }
-        var formData=this.props.form.getFieldsValue();
-        console.log(formData);
-        fetch("http://newsapi.gugujiankong.com/Handler.ashx?action=" + this.state.action
+        var formData = this.props.form.getFieldsValue();
+		console.log(formData);
+		fetch("http://newsapi.gugujiankong.com/Handler.ashx?action=" + this.state.action
 		+ "&username="+formData.userName+"&password="+formData.password
 		+"&r_userName=" + formData.r_userName + "&r_password="
 		+ formData.r_password + "&r_confirmPassword="
-		+ formData.r_confirmPassword, myFetchOptions).then(response=>response.json()).then(json=>{
-            this.setState({
-                userid:json.UserId,
-                userNickName:json.NickUserName
-            });
-        });
+		+ formData.r_confirmpassword, myFetchOptions)
+		.then(response => response.json())
+		.then(json => {
+            // console.log(json);
+			this.setState({userNickName: json.NickUserName, userid: json.UserId});
+			localStorage.userid= json.UserId;
+			localStorage.userNickName = json.NickUserName;
+		});
         if(this.state.action=='login'){
             this.setState({hasLogined:true});
         }
@@ -65,14 +73,20 @@ class PCHeader extends React.Component{
             this.setState({action:'register'});
         }
     }
+    logout(){
+		localStorage.userid= '';
+		localStorage.userNickName = '';
+		this.setState({hasLogined:false});
+	};
     render(){
         let {getFieldDecorator} = this.props.form;
-        const userShow=this.state.hasLogined?<Menu.Item key='logout' className='register'>
+        
+        const userShow=this.state.hasLogined ? <Menu.Item key='logout' className='register'>
             <Button type="primary" htmlType="button">{this.state.userNickName}</Button>
             &nbsp;&nbsp;
             <Link target="_blank"><Button type="dashed" htmlType="button">个人中心</Button></Link>
             &nbsp;&nbsp;
-            <Button type="ghost" htmlType="button">退出</Button>
+            <Button type="ghost" htmlType="button"  onClick={this.logout.bind(this)}>退出</Button>
         </Menu.Item>:<Menu.Item key="register" className="register">
             <Icon type="typestore"></Icon>
             <span>注册/登陆</span>
@@ -128,10 +142,10 @@ class PCHeader extends React.Component{
                             <TabPane tab='登录' key='1'>
                                 <Form horizontal onSubmit={this.handleSubmit}>
                                     <FromItem label='账户'> {
-                                        getFieldDecorator('r_userName',{rules:[{required:true,message:'输入用户名'}]})(<Input placeholder="请输入您的账号" />)
+                                        getFieldDecorator('userName',{rules:[{required:true,message:'输入用户名'}]})(<Input placeholder="请输入您的账号" />)
                                     }</FromItem>
                                     <FromItem label='密码'> {
-                                        getFieldDecorator('r_password',{rules:[{required:true,message:'输入用户名'}]})(<Input placeholder="请输入您的密码" type='password'/>)
+                                        getFieldDecorator('password',{rules:[{required:true,message:'输入用户名'}]})(<Input placeholder="请输入您的密码" type='password'/>)
                                     }</FromItem> 
                                     <Button type='primary' htmlType='submit'>登录</Button> 
                                 </Form>

@@ -20,11 +20,11 @@ export default class PCNewsBlock extends React.Component{
 			? news.map((newsItem, index) => (			
                 <Router>
                     <li key={index}>
-					<Link to={`details/${newsItem.uniquekey}`} target="_blank">
-						{newsItem.title}
-					</Link>
-				</li>
-                </Router> 
+                        <Link to={'/details/'+newsItem.uniquekey} target="_blank">
+                            {newsItem.title}
+                        </Link>
+				    </li>
+                </Router>
 			))
 			: '没有加载到任何新闻';
         return (
